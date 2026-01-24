@@ -1,13 +1,15 @@
-import sys
 import logging
 
 logger = logging.getLogger(__name__)
 
-def handle_mode(mode):
+class InvalidModeError(ValueError):
+    pass
+
+def handle_mode(mode: str) -> None:
     if mode == "dev":
         logger.info("development mode enabled")
     elif mode == "prod":
         logger.info("production mode enabled")
     else:
         logger.error(f"Unknown mode: {mode}")
-        sys.exit(1)
+        raise InvalidModeError(f"Unknown mode: {mode}")
