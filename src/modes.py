@@ -5,6 +5,9 @@ logger = logging.getLogger(__name__)
 class InvalidModeError(ValueError):
     pass
 
+def get_valid_modes() -> list[str]:
+    return ["dev", "prod"]
+
 def handle_mode(mode: str) -> None:
     if mode == "dev":
         logger.info("development mode enabled")
