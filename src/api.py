@@ -1,4 +1,5 @@
 import time
+import logging
 import fastapi
 from fastapi import Request
 from fastapi import FastAPI, HTTPException
@@ -6,16 +7,24 @@ from src.modes import handle_mode, InvalidModeError, get_valid_modes
 
 app = FastAPI()
 
+logger = logging.getLogger("api")
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s %(levelname)s %(name)s %(message)s"
+)
+
 @app.middleware("http")
 async def log_request_time(request: Request, call_next):
     start_time = time.time()
     response = await call_next(request)
     duration = time.time() - start_time
 
-    print(
-        f"{request.method} {request.url.path} "
-        f"completed in {duration:.4f}s"
-    )
+    logger.info(
+    "%s %s completed in %.4fs",
+    request.method,
+    request.url.path,
+    duration,
+)
 
     return response
 
