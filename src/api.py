@@ -1,6 +1,7 @@
 import time
 import logging
 import fastapi
+import uuid
 from fastapi import Request
 from fastapi import FastAPI, HTTPException
 from src.modes import handle_mode, InvalidModeError, get_valid_modes
@@ -15,16 +16,20 @@ logging.basicConfig(
 
 @app.middleware("http")
 async def log_request_time(request: Request, call_next):
+    request_id = str(uuid.uuid4())
+    request.state.request_id = request_id
+
     start_time = time.time()
     response = await call_next(request)
     duration = time.time() - start_time
 
     logger.info(
-    "%s %s completed in %.4fs",
-    request.method,
-    request.url.path,
-    duration,
-)
+        "request_id=%s %s %s completed in %.4fs",
+        request_id,
+        request.method,
+        request.url.path,
+        duration,
+    )
 
     return response
 
