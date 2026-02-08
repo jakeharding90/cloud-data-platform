@@ -2,17 +2,21 @@ import time
 import logging
 import fastapi
 import uuid
+import os
 from fastapi import Request
 from fastapi import FastAPI, HTTPException
 from src.modes import handle_mode, InvalidModeError, get_valid_modes
 
 app = FastAPI()
 
-logger = logging.getLogger("api")
+LOG_LEVEL = os.getenv("LOG_LEVEL", "INFO").upper()
+
 logging.basicConfig(
-    level=logging.INFO,
+    level=LOG_LEVEL,
     format="%(asctime)s %(levelname)s %(name)s %(message)s"
 )
+
+logger = logging.getLogger("api")
 
 @app.middleware("http")
 async def log_request_time(request: Request, call_next):
