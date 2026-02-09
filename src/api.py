@@ -34,7 +34,7 @@ async def log_request_time(request: Request, call_next):
         request.url.path,
         duration,
     )
-
+    response.headers["X-Request-ID"] = request_id
     return response
 
 @app.get("/health")
