@@ -18,6 +18,9 @@ logging.basicConfig(
 
 logger = logging.getLogger("api")
 
+APP_ENV = os.getenv("APP_ENV", "dev").lower()
+PORT = int(os.getenv("PORT", "8000"))
+
 @app.middleware("http")
 async def log_request_time(request: Request, call_next):
     request_id = str(uuid.uuid4())
@@ -52,3 +55,7 @@ def run_mode(mode: str):
         return {"message": f"Mode '{mode}' executed"}
     except InvalidModeError as e:
         raise HTTPException(status_code=400, detail=str(e))
+    
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run("src.api:app", host="0.0.0.0", port=PORT, reload=(APP_ENV == "dev"))
