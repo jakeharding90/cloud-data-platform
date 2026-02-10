@@ -17,3 +17,9 @@ def test_run_invalid_mode_returns_400():
     response = client.get("/run/test")
     assert response.status_code == 400
     assert response.json() == {"detail": "Unknown mode: test"}
+
+def test_health_includes_request_id_header():
+    response = client.get("/health")
+    assert response.status_code == 200
+    assert "X-Request-ID" in response.headers
+    assert response.headers["X-Request-ID"]
